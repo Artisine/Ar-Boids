@@ -23,7 +23,7 @@ export function createSnowflake() {
 	}
 
 	snowflake = nowString + alphanumericString;
-	console.log(snowflake);
+	// console.log(snowflake);
 	return snowflake;
 }
 

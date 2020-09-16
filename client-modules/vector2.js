@@ -5,6 +5,7 @@ export class Vector2 {
 		this.name = "Vector2";
 		this.x = x;
 		this.y = y;
+		this.magnitude = null;
 		this.parent = parent || null;
 	}
 
@@ -79,6 +80,42 @@ export class Vector2 {
 			console.warn("no arguments provided to Vector2::minus()");
 		}
 		return this;
+	}
+
+	divideByScalar(scalar) {
+		return this.set(
+			this.getX / scalar,
+			this.getY / scalar
+		);
+	}
+	multiplicationByScalar(scalar) {
+		return this.set(
+			this.getX * scalar,
+			this.getY * scalar
+		);
+	}
+
+	get getMagnitude2() {
+		return Math.sqrt( (this.x ** 2) + (this.y ** 2) );
+	}
+	getMagnitude() {
+		this.magnitude = Math.sqrt( (this.x ** 2) + (this.y ** 2) );
+		return this.magnitude;
+	}
+
+	get getNormalised2() {
+		return new Vector2(
+			this.getX / this.getMagnitude(),
+			this.getY / this.getMagnitude()
+		);
+	}
+	getNormalised() {
+		const normal = new Vector2(
+			this.getX / this.getMagnitude(),
+			this.getY / this.getMagnitude()
+		);
+		this.normalised = normal;
+		return this.normalised;
 	}
 }
 

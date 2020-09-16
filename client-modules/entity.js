@@ -1,7 +1,7 @@
 import * as Utility from "./utility.js";
 import {Vector2} from "./vector2.js";
 import {instances, Instance} from "./instance.js";
-import {mainCanvas, mainCamera} from "../client.js";
+import {mainCanvas, mainCamera, deltaTimeMultiplier} from "../client.js";
 export default class Entity extends Instance {
 	constructor() {
 		super();
@@ -26,7 +26,7 @@ export default class Entity extends Instance {
 
 		this.shouldTeleportToOtherSideOfScreen = false;
 		
-		console.log(`${this.className} ${this.id} created.`);
+		// console.log(`${this.className} ${this.id} created.`);
 	}
 
 	get getPosition() {
@@ -212,8 +212,8 @@ export default class Entity extends Instance {
 		// 	(this.getAcceleration.getY / 60)
 		// );
 		this.addVelocity(
-			this.getAcceleration.getX / 60,
-			this.getAcceleration.getY / 60
+			deltaTimeMultiplier * this.getAcceleration.getX / 60,
+			deltaTimeMultiplier * this.getAcceleration.getY / 60
 		);
 
 		// this.getPosition.add(
@@ -221,8 +221,8 @@ export default class Entity extends Instance {
 		// 	(this.getVelocity.getY / 60)
 		// );
 		this.addPosition(
-			this.getVelocity.getX / 60,
-			this.getVelocity.getY / 60
+			deltaTimeMultiplier * this.getVelocity.getX / 60,
+			deltaTimeMultiplier * this.getVelocity.getY / 60
 		);
 
 		// console.log(`${this.getClassName} ${this.getId} has Velocity , Acceleration , Position ,`, this.getVelocity, this.getAcceleration, this.getPosition);
@@ -247,15 +247,20 @@ export default class Entity extends Instance {
 	teleportToOtherSideOfScreen() {
 		if (this.checkIfOutOfScreenBounds() && this.shouldTeleportToOtherSideOfScreen) {
 			console.log(`teleporting...`);
-			const newX = mainCanvas.canvasElement.width - this.getPosition.getX;
-			const newXAddition = (Math.sign(newX)) ? (-this.getSize.getX * 2) : ( this.getSize.getX * 2);
-			console.log({newX, newXAddition});
-
-			const newY = mainCanvas.canvasElement.height - this.getPosition.getY;
-			const newYAddition = (Math.sign(newY)) ? (-this.getSize.getY * 2) : ( this.getSize.getY * 2);
-
-			this.position.setX(newX + newXAddition);
-			this.position.setY(newY + newYAddition);
+			const halfX = this.getSize.getX * 0.5;
+			const halfY = this.getSize.getY * 0.5;
+			if (this.getPosition.getX < mainCamera.getPosition.getX - mainCanvas.canvasElement.halfWidth - halfX) {
+				this.getPosition.setX(mainCamera.getPosition.getX + mainCanvas.canvasElement.halfWidth);
+			}
+			if (this.getPosition.getX > mainCamera.getPosition.getX + mainCanvas.canvasElement.halfWidth + halfX) {
+				this.getPosition.setX(mainCamera.getPosition.getX - mainCanvas.canvasElement.halfWidth);
+			}
+			if (this.getPosition.getY < mainCamera.getPosition.getY - mainCanvas.canvasElement.halfHeight - halfY) {
+				this.getPosition.setY(mainCamera.getPosition.getY + mainCanvas.canvasElement.halfHeight);
+			}
+			if (this.getPosition.getY > mainCamera.getPosition.getY + mainCanvas.canvasElement.halfHeight + halfY) {
+				this.getPosition.setY(mainCamera.getPosition.getY - mainCanvas.canvasElement.halfHeight);
+			}
 		}
 	}
 }

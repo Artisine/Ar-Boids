@@ -4,7 +4,7 @@ import * as Utility from "./client-modules/utility.js";
 import {Vector2} from "./client-modules/vector2.js";
 // import Tilemap from "./client-modules/tilemap.js";
 import Canvas from "./client-modules/canvas.js";
-import {instances, Instance} from "./client-modules/instance.js";
+import {instances, Instance, boids} from "./client-modules/instance.js";
 import Entity from "./client-modules/entity.js";
 import Actor from "./client-modules/actor.js";
 import Camera from "./client-modules/camera.js";
@@ -13,6 +13,7 @@ import Boid from "./client-modules/boid.js";
 import {UserInputService} from "./client-modules/userInputService.js";
 // import TileMap from "./client-modules/tilemap.js";
 
+export const deltaTimeMultiplier = 3;
 
 const mainCanvas = new Canvas(Utility.getElement("#canvas"));
 window.addEventListener("resize", mainCanvas.resize.bind(mainCanvas));
@@ -42,10 +43,32 @@ mainPlayer.setPosition(new Vector2(200, 200)).setTransparency(1).setCanCollide(f
 
 
 
+for (let i=0; i<100; i+=1) {
+	const boid = new Boid();
+	boid.setPosition(
+		(Math.random() - 0.5) * mainCanvas.canvasElement.width,
+		(Math.random() - 0.5) * mainCanvas.canvasElement.height
+	);
+	boid.setVelocity(
+		(Math.random() - 0.5) * 10000,
+		(Math.random() - 0.5) * 10000
+	);
+}
+const bobTheBoid = new Boid();
+bobTheBoid.determinedColor = "#ff0000";
+bobTheBoid.showRadiusForFieldOfView = true;
 
-const bob = new Boid();
 
 
+const input_toggleBoidsFieldOfView = Utility.g("#toggleBoidsFieldOfView");
+input_toggleBoidsFieldOfView.addEventListener("change", ()=>{
+	const value = input_toggleBoidsFieldOfView.checked;
+	console.log(`Value now ${value}`);
+	for (let boid of boids) {
+		boid.showRadiusForFieldOfView = (!! value);
+	}
+	bobTheBoid.showRadiusForFieldOfView = true;
+});
 
 
 // console.log(Utility.g("#image_tileAtlas"));

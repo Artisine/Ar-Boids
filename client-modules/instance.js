@@ -1,6 +1,7 @@
 import * as Utility from "./utility.js";
 
 export const instances = new Map();
+export const boids = [];
 
 export class Instance {
 	constructor() {
@@ -13,7 +14,7 @@ export class Instance {
 			instances.set(this.id, this);
 		}
 		// console.log(instances.get(this.id));
-		console.log(`${this.className} ${this.id} created.`);
+		// console.log(`${this.className} ${this.id} created.`);
 
 		return instances.get(this.id);
 	}

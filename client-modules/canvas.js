@@ -175,6 +175,9 @@ export default class Canvas {
 				if (obj.move !== undefined) obj.move();
 				if (obj.stopDrift !== undefined) obj.stopDrift();
 				if (obj.teleportToOtherSideOfScreen !== undefined) obj.teleportToOtherSideOfScreen();
+				if (obj.findOtherBoidsInViewingField !== undefined) obj.findOtherBoidsInViewingField();
+				if (obj.simulateRules !== undefined) obj.simulateRules();
+				// if (obj.limit_velocity !== undefined) obj.limit_velocity();
 
 				if (obj.render !== undefined) obj.render();
 			}
