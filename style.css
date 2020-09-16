@@ -69,4 +69,6 @@ canvas {
 	left: 2em;
 	background-color: var(--grey2);
 }
-
+#inputNumberOfBoids {
+	width: 3rem;
+}

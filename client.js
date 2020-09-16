@@ -43,17 +43,17 @@ mainPlayer.setPosition(new Vector2(200, 200)).setTransparency(1).setCanCollide(f
 
 
 
-for (let i=0; i<100; i+=1) {
-	const boid = new Boid();
-	boid.setPosition(
-		(Math.random() - 0.5) * mainCanvas.canvasElement.width,
-		(Math.random() - 0.5) * mainCanvas.canvasElement.height
-	);
-	boid.setVelocity(
-		(Math.random() - 0.5) * 10000,
-		(Math.random() - 0.5) * 10000
-	);
-}
+// for (let i=0; i<100; i+=1) {
+// 	const boid = new Boid();
+// 	boid.setPosition(
+// 		(Math.random() - 0.5) * mainCanvas.canvasElement.width,
+// 		(Math.random() - 0.5) * mainCanvas.canvasElement.height
+// 	);
+// 	boid.setVelocity(
+// 		(Math.random() - 0.5) * 10000,
+// 		(Math.random() - 0.5) * 10000
+// 	);
+// }
 const bobTheBoid = new Boid();
 bobTheBoid.determinedColor = "#ff0000";
 bobTheBoid.showRadiusForFieldOfView = true;
@@ -70,6 +70,29 @@ input_toggleBoidsFieldOfView.addEventListener("change", ()=>{
 	bobTheBoid.showRadiusForFieldOfView = true;
 });
 
+const input_inputNumberOfBoids = Utility.g("#inputNumberOfBoids");
+function init_boids() {
+	const num = Number(input_inputNumberOfBoids.value);
+	console.log(num);
+	if (boids.length > num) {
+		boids = boids.slice(0, num - 1);
+	} else {
+		const delta = num - boids.length;
+		for (let i = 0; i < delta; i += 1) {
+			const boid = new Boid();
+			boid.setPosition(
+				(Math.random() - 0.5) * mainCanvas.canvasElement.width,
+				(Math.random() - 0.5) * mainCanvas.canvasElement.height
+			);
+			boid.setVelocity(
+				(Math.random() - 0.5) * 10000,
+				(Math.random() - 0.5) * 10000
+			);
+		}
+	}
+}
+input_inputNumberOfBoids.addEventListener("input", init_boids);
+init_boids();
 
 // console.log(Utility.g("#image_tileAtlas"));
 
