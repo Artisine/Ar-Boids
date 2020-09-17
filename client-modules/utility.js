@@ -25,6 +25,14 @@ export function createSnowflake() {
 	snowflake = nowString + alphanumericString;
 	// console.log(snowflake);
 	return snowflake;
+};
+export function generateID() {
+	let output = "";
+	let leng = alphabet.length;
+	for (let i = 0; i < 8; i += 1) {
+		output += alphabet[Math.floor(Math.random() * leng)];
+	}
+	return output;
 }
 
 export function getElement(query) {

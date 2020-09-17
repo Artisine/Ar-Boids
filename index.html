@@ -10,16 +10,27 @@
 		<canvas id="canvas">uhoh</canvas>
 	</main>
 	<aside class="hovering-buttons">
-		<div>
-			<input id="toggleBoidsFieldOfView" type="checkbox">
-			<label for="toggleBoidsFieldOfView">Show/Hide Boids Field of View</label>
-		</div>
-		<div>
-			<input id="inputNumberOfBoids" type="number" min="1" max="200" value="25">
-			<label for="inputNumberOfBoids">Alter number of Boids visible</label>
-		</div>
+		<form onsubmit="return false;">
+			<div class="form-group">
+				<div class="input-group">
+					<div class="custom-control custom-checkbox">
+						<input id="toggleBoidsFieldOfView" type="checkbox" class="custom-control-input">
+						<label for="toggleBoidsFieldOfView" class="custom-control-label">Show/Hide Boids Field of View</label>
+					</div>
+				</div>
+				<div class="input-group mt-2">
+					<input id="rangeNumberOfBoids" type="range" min="1" max="300" value="25" class="custom-range form-control-range">
+					<label for="rangeNumberOfBoids">Alter number of Boids visible (<span id="rangeNumberOfBoids-text"></span>)</label>
+				</div>
+				<div class="input-group mt-2">
+					<input id="rangeBoidsSpeed" type="range" min="0" max="20" step="1" value="1" class="custom-range form-control-range">
+					<label for="rangeBoidsSpeed">Change Speed of Boids (<span id="rangeBoidsSpeed-text"></span>)</label>
+				</div>
+			</div>
+		</form>
 	</aside>
 
+	<link href="./bootstrap.min.css" rel="stylesheet" type="text/css">
 	<link href="./style.css" rel="stylesheet" type="text/css">
 	<script src="./client.js" type="module"></script>
 </body>

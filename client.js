@@ -13,7 +13,10 @@ import Boid from "./client-modules/boid.js";
 import {UserInputService} from "./client-modules/userInputService.js";
 // import TileMap from "./client-modules/tilemap.js";
 
-export const deltaTimeMultiplier = 3;
+export var deltaTimeMultiplier = 3;
+const minimumCountBoids = 5;
+const maximumCountBoids = 300;
+var boidsViewFieldVisible = false;
 
 const mainCanvas = new Canvas(Utility.getElement("#canvas"));
 window.addEventListener("resize", mainCanvas.resize.bind(mainCanvas));
@@ -43,39 +46,41 @@ mainPlayer.setPosition(new Vector2(200, 200)).setTransparency(1).setCanCollide(f
 
 
 
-// for (let i=0; i<100; i+=1) {
-// 	const boid = new Boid();
-// 	boid.setPosition(
-// 		(Math.random() - 0.5) * mainCanvas.canvasElement.width,
-// 		(Math.random() - 0.5) * mainCanvas.canvasElement.height
-// 	);
-// 	boid.setVelocity(
-// 		(Math.random() - 0.5) * 10000,
-// 		(Math.random() - 0.5) * 10000
-// 	);
-// }
+
 const bobTheBoid = new Boid();
 bobTheBoid.determinedColor = "#ff0000";
 bobTheBoid.showRadiusForFieldOfView = true;
+bobTheBoid.setName("Bob The Boid");
 
 
 
 const input_toggleBoidsFieldOfView = Utility.g("#toggleBoidsFieldOfView");
 input_toggleBoidsFieldOfView.addEventListener("change", ()=>{
 	const value = input_toggleBoidsFieldOfView.checked;
-	console.log(`Value now ${value}`);
+	boidsViewFieldVisible = value;
+	// console.log(`BoidsViewFieldVisible now ${value}`);
 	for (let boid of boids) {
-		boid.showRadiusForFieldOfView = (!! value);
+		boid.showRadiusForFieldOfView = boidsViewFieldVisible;
 	}
 	bobTheBoid.showRadiusForFieldOfView = true;
 });
 
-const input_inputNumberOfBoids = Utility.g("#inputNumberOfBoids");
+const input_rangeNumberOfBoids = Utility.g("#rangeNumberOfBoids");
+const input_rangeNumberOfBoids_text = Utility.g("#rangeNumberOfBoids-text");
 function init_boids() {
-	const num = Number(input_inputNumberOfBoids.value);
-	console.log(num);
+	let num = Number(input_rangeNumberOfBoids.value);
+	if (num < minimumCountBoids) num = minimumCountBoids;
+	else if (num > maximumCountBoids) num = maximumCountBoids;
 	if (boids.length > num) {
-		boids = boids.slice(0, num - 1);
+		const delta = boids.length - num;
+		try {
+			for (let i = 0; i < delta; i += 1) {
+				const k = (boids.length - delta) + i;
+				boids[k].destroy();
+			}
+		} catch(err) {
+			console.error(err);
+		}
 	} else {
 		const delta = num - boids.length;
 		for (let i = 0; i < delta; i += 1) {
@@ -88,11 +93,28 @@ function init_boids() {
 				(Math.random() - 0.5) * 10000,
 				(Math.random() - 0.5) * 10000
 			);
+			boid.showRadiusForFieldOfView = boidsViewFieldVisible;
 		}
 	}
-}
-input_inputNumberOfBoids.addEventListener("input", init_boids);
-init_boids();
+	input_rangeNumberOfBoids_text.innerHTML = `${boids.length}x`;
+}; init_boids();
+input_rangeNumberOfBoids.addEventListener("input", init_boids);
+
+
+const input_rangeBoidsSpeed = Utility.g("#rangeBoidsSpeed");
+const input_rangeBoidsSpeed_text = Utility.g("#rangeBoidsSpeed-text");
+input_rangeBoidsSpeed.addEventListener("input", boids_speed);
+function boids_speed() {
+	try {
+		const value = Number(input_rangeBoidsSpeed.value);
+		input_rangeBoidsSpeed_text.innerHTML = `${value}x`;
+		deltaTimeMultiplier = value;
+	} catch(err) {
+		console.error(err);
+		// alert(err);
+	}
+}; boids_speed();
+
 
 // console.log(Utility.g("#image_tileAtlas"));
 

@@ -26,6 +26,7 @@ export default class Boid extends Entity {
 		this.intervalBetweenSuddenVelocityIncrease = Math.min(10, Math.random() * 30);
 		this.durationProgressSuddenVelocityIncrease = 0;
 		this.boidGroup = Math.floor(Math.random() * 2);
+		this.alive = true;
 
 		// console.log(`radiusForFieldOfView: ${this.radiusForFieldOfView}`);
 		this.colors = ["#03045e","#023e8a","#0077b6","#0096c7","#00b4d8","#48cae4","#90e0ef","#ade8f4","#caf0f8"];
@@ -35,7 +36,26 @@ export default class Boid extends Entity {
 		// console.log(boids);
 		this.init();
 	}
-
+	destroy() {
+		console.log(`Destroying ${this.id}`);
+		// boids = boids.splice(
+		// 	boids.filter(item => {
+		// 		return item.id === this.id;
+		// 	})[0]
+		// );
+		let index = null;
+		const len = boids.length;
+		for (let i = 0; i < len; i += 1) {
+			if (boids[i].id === this.id) {
+				index = i;
+				console.log(`Found it, index of ${index}`);
+			}
+		}
+		boids.splice(index, 1);
+		instances.delete(this.id);
+		delete this;
+		return true;
+	}
 	init() {
 		this.setRotation(Math.random() * 360);
 		this.velocity.set(
@@ -197,17 +217,7 @@ export default class Boid extends Entity {
 	}
 
 	simulateRules() {
-		// let v = [];
-		// if (this.rulesEnabled[0]) v.push(this.rule1());
-		// if (this.rulesEnabled[1]) v.push(this.rule2());
-		// if (this.rulesEnabled[2]) v.push(this.rule3());
-		
-
-		// for (let item of v) {
-		// 	this.getVelocity.add(item);
-		// }
-		// // this.velocity = this.velocity.add(v1).add(v2).add(v3);
-		// this.position = this.position.add(this.getVelocity);
+		if (! this.alive) return 1;
 
 		this.durationProgressSuddenVelocityIncrease += 1 / 60;
 		if (this.durationProgressSuddenVelocityIncrease >= this.intervalBetweenSuddenVelocityIncrease) {
@@ -220,9 +230,6 @@ export default class Boid extends Entity {
 		this.introduceRandomVelocityIncrease();
 		this.introduceRandomVelocityMultiply();
 		this.limit_velocity();
-
-		
-		
 	}
 	limit_velocity() {
 		const speedLimit = 100;

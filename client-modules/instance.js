@@ -7,7 +7,7 @@ export class Instance {
 	constructor() {
 		this.className = "Instance";
 		this.name = "Instance";
-		this.id = Utility.createSnowflake();
+		this.id = Utility.generateID();
 		this.parent = null;
 
 		if (!!! instances.get(this.id)) {

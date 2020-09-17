@@ -70,5 +70,8 @@ canvas {
 	background-color: var(--grey2);
 }
 #inputNumberOfBoids {
-	width: 3rem;
+	width: 100%;
+}
+#rangeBoidsSpeed {
+	width: 100%;
 }
