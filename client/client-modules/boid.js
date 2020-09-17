@@ -246,6 +246,7 @@ export default class Boid extends Entity {
 	}
 
 	render() {
+		
 		mainCanvas.ctx.save();
 		mainCanvas.ctx.translate(this.getPosition.getX, this.getPosition.getY);
 		mainCanvas.ctx.rotate( this.getRotationBasedOnVelocity );

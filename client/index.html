@@ -11,8 +11,8 @@
 	</main>
 	<aside class="hovering-buttons">
 		<form onsubmit="return false;">
-			<div class="form-group">
-				<div class="input-group">
+			<div class="form-group p-1">
+				<div class="input-group mt-2">
 					<div class="custom-control custom-checkbox">
 						<input id="toggleBoidsFieldOfView" type="checkbox" class="custom-control-input">
 						<label for="toggleBoidsFieldOfView" class="custom-control-label">Show/Hide Boids Field of View</label>
@@ -25,6 +25,12 @@
 				<div class="input-group mt-2">
 					<input id="rangeBoidsSpeed" type="range" min="0" max="20" step="1" value="1" class="custom-range form-control-range">
 					<label for="rangeBoidsSpeed">Change Speed of Boids (<span id="rangeBoidsSpeed-text"></span>)</label>
+				</div>
+				<div class="input-group mt-2">
+					<div class="custom-control custom-checkbox mt-2">
+						<input id="toggleLighthouseMode" type="checkbox" class="custom-control-input">
+						<label for="toggleLighthouseMode" class="custom-control-label">Toggle Lighthouse Mode</label>
+					</div>
 				</div>
 			</div>
 		</form>

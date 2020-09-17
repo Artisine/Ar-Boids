@@ -32,9 +32,9 @@ export {mainPlayer};
 
 const mainCamera = new Camera();
 mainCamera.setPosition(100, 100);
-setInterval(()=>{
-	mainCamera.setRotation(mainCamera.getRotation + 30);
-}, 500);
+// setInterval(()=>{
+// 	mainCamera.setRotation(mainCamera.getRotation + 0.3);
+// }, 5);
 mainCanvas.setCamera(mainCamera);
 export {mainCamera};
 
@@ -114,6 +114,15 @@ function boids_speed() {
 		// alert(err);
 	}
 }; boids_speed();
+
+
+const input_toggleLighthouseMode = Utility.g("#toggleLighthouseMode");
+input_toggleLighthouseMode.addEventListener("change", lighthouse_mode);
+function lighthouse_mode() {
+	const checked = input_toggleLighthouseMode.checked;
+	mainCanvas.lighthouseMode = checked;
+	console.log(`Lighthouse Mode ${(checked) ? "ON" : "Off"}.`);
+}
 
 
 // console.log(Utility.g("#image_tileAtlas"));

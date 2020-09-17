@@ -22,6 +22,9 @@ export default class Camera extends Entity {
 		this.parent = null;
 		this.scaling = null; // Scaling is shared with Canvas
 
+		this.angleOfView = Math_rad(90);
+		this.lengthOfViewLines = 50;
+
 		this.setSize(20, 20);
 	}
 
@@ -29,6 +32,9 @@ export default class Camera extends Entity {
 		this.parent = thing;
 		thing.camera = this;
 		console.log(`Bound Camera to thing: ${thing.getClassName} ${thing.getName} ${thing.id}`);
+	}
+	canSeeBoid(boid) {
+		
 	}
 
 	render() {
@@ -50,16 +56,23 @@ export default class Camera extends Entity {
 		mainCanvas.strokeprevious("white");
 		mainCanvas.fillprevious("purple");
 
+		const halfViewAngle = this.angleOfView * 0.5;
 		// Step 3 - Visual lines?
-		mainCanvas.lineBetween(
-			new Vector2(this.getSize.getX/2, this.getSize.getY/2),
-			new Vector2(this.getSize.getX * 2, this.getSize.getY)
-		).strokeprevious("white");
 
-		mainCanvas.lineBetween(
-			new Vector2(this.getSize.getX/2, -this.getSize.getY/2),
-			new Vector2(this.getSize.getX * 2, -this.getSize.getY)
-		).strokeprevious("white");
+		if (this.parent !== null && this.parent.lighthouseMode) {
+			mainCanvas.ctx.rotate(-halfViewAngle);
+			mainCanvas.lineBetween(
+				new Vector2(0, 0),
+				new Vector2(999, 0)
+			).strokeprevious("white");
+			mainCanvas.ctx.rotate(halfViewAngle);
+			mainCanvas.ctx.rotate(halfViewAngle);
+			mainCanvas.lineBetween(
+				new Vector2(0, 0),
+				new Vector2(999 ,0)
+			).strokeprevious("white");
+			mainCanvas.ctx.rotate(-halfViewAngle);
+		}
 
 		mainCanvas.ctx.restore();
 	}

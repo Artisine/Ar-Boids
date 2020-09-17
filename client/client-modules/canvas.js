@@ -16,6 +16,7 @@ export default class Canvas {
 
 		this.camera = null;
 		this.scaling = new Vector2(1, 1);
+		this.lighthouseMode = false;
 
 		this.resize();
 		console.log(`[%ccanvas.js%c] Locked and loaded!`, "color: purple", "color: black");
@@ -160,6 +161,9 @@ export default class Canvas {
 		
 
 		if (this.camera !== null) {
+
+			this.camera.setRotation(this.camera.getRotation + 1);
+
 			this.wipe();
 			this.ctx.save();
 			this.ctx.setTransform(this.scaling.getX, 0, 0, this.scaling.getY, 0, 0);
