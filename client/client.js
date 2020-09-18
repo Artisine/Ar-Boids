@@ -137,7 +137,7 @@ function lighthouseChangeFOV() {
 	const value = Number(input_rangeLighthouseFOV.value);
 	mainCamera.angleOfView = value;
 	input_rangeLighthouseFOV_text.innerHTML = `${value}`;
-}
+}; lighthouseChangeFOV();
 
 
 // console.log(Utility.g("#image_tileAtlas"));
