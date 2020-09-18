@@ -1,5 +1,5 @@
 import {Math_rad, Math_deg, distanceBetweenPoints} from "./utility.js";
-import {mainCanvas, mainCamera} from "../client.js";
+import {mainCanvas, mainCamera, deltaTimeMultiplier} from "../client.js";
 import {instances, Instance, boids} from "./instance.js";
 import Entity from "./entity.js";
 import Actor from "./actor.js";
@@ -32,6 +32,9 @@ export default class Boid extends Entity {
 		this.durationProgressSuddenVelocityIncrease = 0;
 		this.boidGroup = Math.floor(Math.random() * 2);
 		this.alive = true;
+		this.deathColor = "#b3aead";
+		this.deathDecayDuration = 7000;
+		this.deathDecayProgress = 0;
 
 		// console.log(`radiusForFieldOfView: ${this.radiusForFieldOfView}`);
 		this.colors = ["#03045e","#023e8a","#0077b6","#0096c7","#00b4d8","#48cae4","#90e0ef","#ade8f4","#caf0f8"];
@@ -40,6 +43,22 @@ export default class Boid extends Entity {
 		boids.push(this);
 		// console.log(boids);
 		this.init();
+	}
+	move() {
+		if (! this.alive) return 1;
+		this.addVelocity(
+			deltaTimeMultiplier * this.getAcceleration.getX / 60,
+			deltaTimeMultiplier * this.getAcceleration.getY / 60
+		);
+		this.addPosition(
+			deltaTimeMultiplier * this.getVelocity.getX / 60,
+			deltaTimeMultiplier * this.getVelocity.getY / 60
+		);
+	}
+	death() {
+		if (this.invulnerable) return this;
+		console.log(`${this.getClassName} ${this.getName} ${this.getId} died.`);
+		this.alive = false;
 	}
 	destroy() {
 		console.log(`Destroying ${this.id}`);
@@ -222,21 +241,21 @@ export default class Boid extends Entity {
 	}
 
 	simulateRules() {
-		if (! this.alive) return 1;
-
-		this.durationProgressSuddenVelocityIncrease += 1 / 60;
-		if (this.durationProgressSuddenVelocityIncrease >= this.intervalBetweenSuddenVelocityIncrease) {
-			this.suddenVelocityIncrease();
-		}
-		this.rule1_coherrence();
-		this.rule2_separation();
-		this.rule3_alignment();
-		this.keepWithinBounds();
-		this.introduceRandomVelocityIncrease();
-		this.introduceRandomVelocityMultiply();
-		this.limit_velocity();
-		if (this.isWithinHellfire()) {
-			this.addHealth(-hundredOverSixty);
+		if (this.alive) {
+			this.durationProgressSuddenVelocityIncrease += 1 / 60;
+			if (this.durationProgressSuddenVelocityIncrease >= this.intervalBetweenSuddenVelocityIncrease) {
+				this.suddenVelocityIncrease();
+			}
+			this.rule1_coherrence();
+			this.rule2_separation();
+			this.rule3_alignment();
+			this.keepWithinBounds();
+			this.introduceRandomVelocityIncrease();
+			this.introduceRandomVelocityMultiply();
+			this.limit_velocity();
+			if (this.isWithinHellfire()) {
+				this.addHealth(-hundredOverSixty);
+			}
 		}
 	}
 	limit_velocity() {
@@ -270,6 +289,15 @@ export default class Boid extends Entity {
 		if (mainCanvas.lighthouseMode && !mainCanvas.camera.canSeeBoid(this)) {
 			return 1;
 		}
+
+		if (! this.alive) {
+			this.deathDecayProgress += thousandOverSixty;
+			this.setTransparency(1 - (this.deathDecayProgress / this.deathDecayDuration));
+			if (this.deathDecayProgress >= this.deathDecayDuration) {
+				this.destroy();
+			}
+		}
+
 		mainCanvas.ctx.save();
 		mainCanvas.ctx.translate(this.getPosition.getX, this.getPosition.getY);
 		mainCanvas.ctx.rotate( this.getRotationBasedOnVelocity );
@@ -296,7 +324,8 @@ export default class Boid extends Entity {
 		);
 		mainCanvas.closeNewPath();
 		mainCanvas.strokeprevious("black");
-		mainCanvas.fillprevious(this.determinedColor);
+		if (this.alive) mainCanvas.fillprevious(this.determinedColor);
+		else mainCanvas.fillprevious(this.deathColor);
 
 		// Step 2 - Render Circle for "radiusForFieldOfView"
 		if (this.showRadiusForFieldOfView) {
