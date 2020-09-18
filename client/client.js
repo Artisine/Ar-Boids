@@ -10,28 +10,34 @@ import Actor from "./client-modules/actor.js";
 import Camera from "./client-modules/camera.js";
 import Player from "./client-modules/player.js";
 import Boid from "./client-modules/boid.js";
-import {UserInputService} from "./client-modules/userInputService.js";
+import Diep from "./client-modules/diep.js";
+import {UserInputService, controlsApplyTo} from "./client-modules/userInputService.js";
 // import TileMap from "./client-modules/tilemap.js";
 
+export var mouse = {x: undefined, y: undefined};
 export var deltaTimeMultiplier = 3;
 const minimumCountBoids = 5;
 const maximumCountBoids = 300;
 var boidsViewFieldVisible = false;
+export var hellfireEnabled = false;
 
 const mainCanvas = new Canvas(Utility.getElement("#canvas"));
 window.addEventListener("resize", mainCanvas.resize.bind(mainCanvas));
 export {mainCanvas};
 
 const mainPlayer = new Player();
+controlsApplyTo.set(mainPlayer.id, mainPlayer);
 window.addEventListener("keydown", UserInputService.whenKeyboardDown);
 window.addEventListener("keyup", UserInputService.whenKeyboardUp);
-window.addEventListener("mousedown", UserInputService.whenMouseDown);
-window.addEventListener("mouseup", UserInputService.whenMouseUp);
-window.addEventListener("click", UserInputService.whenMouseClick);
+mainCanvas.canvasElement.addEventListener("mousedown", UserInputService.whenMouseDown);
+mainCanvas.canvasElement.addEventListener("mouseup", UserInputService.whenMouseUp);
+mainCanvas.canvasElement.addEventListener("click", UserInputService.whenMouseClick);
+mainCanvas.canvasElement.addEventListener("mousemove", UserInputService.whenMouseMove);
 export {mainPlayer};
 
+
 const mainCamera = new Camera();
-mainCamera.setPosition(100, 100);
+mainCamera.setPosition(0, 0);
 // setInterval(()=>{
 // 	mainCamera.setRotation(mainCamera.getRotation + 0.3);
 // }, 5);
@@ -44,13 +50,23 @@ console.log(mainPlayer);
 
 mainPlayer.setPosition(new Vector2(200, 200)).setTransparency(1).setCanCollide(false);
 
-
+const mainDiep = new Diep();
+mainDiep.setPosition(mainPlayer.getPosition.getX, mainPlayer.getPosition.getY);
+mainPlayer.bindControlsTo(mainDiep);
+mainPlayer.removeControlsFrom(mainDiep);
+mainDiep.setTransparency(1).setCanCollide(false);
 
 
 const bobTheBoid = new Boid();
 bobTheBoid.determinedColor = "#ff0000";
 bobTheBoid.showRadiusForFieldOfView = true;
 bobTheBoid.setName("Bob The Boid");
+bobTheBoid.setInvulnerable(true);
+
+
+setInterval(()=>{
+	updateBoidsCountText();
+}, 1000);
 
 
 
@@ -96,8 +112,11 @@ function init_boids() {
 			boid.showRadiusForFieldOfView = boidsViewFieldVisible;
 		}
 	}
-	input_rangeNumberOfBoids_text.innerHTML = `${boids.length}x`;
+	updateBoidsCountText();
 }; init_boids();
+export function updateBoidsCountText() {
+	input_rangeNumberOfBoids_text.innerHTML = `${boids.length}x`;
+}
 input_rangeNumberOfBoids.addEventListener("input", init_boids);
 
 
@@ -138,6 +157,41 @@ function lighthouseChangeFOV() {
 	mainCamera.angleOfView = value;
 	input_rangeLighthouseFOV_text.innerHTML = `${value}`;
 }; lighthouseChangeFOV();
+
+
+const input_toggleHellfire = Utility.g("#toggleHellfire");
+input_toggleHellfire.addEventListener("input", togglehellfire);
+function togglehellfire() {
+	const checked = input_toggleHellfire.checked;
+	hellfireEnabled = checked;
+	if (checked) {
+		document.body.classList.add("cursor-crosshair");
+	} else {
+		document.body.classList.remove("cursor-crosshair");
+	}
+}
+
+
+export function changeMouseCursorIfMouseOverBoid() {
+	var valid = false;
+	let closest_dist = Infinity;
+	let closest = null;
+	for (let i = 0; i < boids.length; i += 1) {
+		const boid = boids[i];
+		const dist = Utility.distanceBetweenPoints(new Vector2(mouse.x, mouse.y), boid.getPosition);
+		
+		if (dist <= 50) {
+			console.log(`${boid.id}  to  mouse: ${dist}`);
+			valid = true;
+		}
+	}
+	// console.log({a: closest_dist, b: closest});
+	if (valid) {
+		document.body.classList.add("cursor-pointer");
+	} else {
+		document.body.classList.remove("cursor-pointer");
+	}
+}
 
 
 // console.log(Utility.g("#image_tileAtlas"));

@@ -18,6 +18,10 @@ export class Instance {
 
 		return instances.get(this.id);
 	}
+	destroy() {
+		instances.delete(this.id);
+		// console.log(`Destroyed ${this.id}`);
+	}
 	get getClassName() {
 		return this.className;
 	}

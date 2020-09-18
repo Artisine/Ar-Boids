@@ -70,14 +70,13 @@ canvas {
 	position: fixed;
 	top: 2em;
 	left: 2em;
+}
+.hovering-buttons-background {
 	background-color: var(--grey2);
 	opacity: 0.25;
 	transition: opacity 0.25s ease-in-out;
 }
-/* .hovering-buttons:focus-within {
-	opacity: 1;
-} */
-.hovering-buttons:hover {
+.hovering-buttons-background:hover {
 	opacity: 1;
 }
 #inputNumberOfBoids {
@@ -88,4 +87,11 @@ canvas {
 }
 #rangeLighthouseFOV {
 	width: 100%;
+}
+
+.cursor-crosshair {
+	cursor: crosshair;
+}
+.cursor-pointer {
+	cursor: pointer;
 }

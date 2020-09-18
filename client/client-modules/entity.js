@@ -23,6 +23,7 @@ export default class Entity extends Instance {
 		this.maximumHealth = 100;
 		this.health = this.maximumHealth;
 		this.healthRegenerationRate = 1; //unit per every second;
+		this.invulnerable = false;
 
 		this.shouldTeleportToOtherSideOfScreen = false;
 		
@@ -70,6 +71,9 @@ export default class Entity extends Instance {
 	}
 	get getHealthRegenerationRate() {
 		return this.healthRegenerationRate;
+	}
+	get getInvulnerable() {
+		return this.invulnerable;
 	}
 
 
@@ -145,6 +149,10 @@ export default class Entity extends Instance {
 		this.healthRegenerationRate = Utility.forceInteger(i);
 		return this;
 	}
+	setInvulnerable(b) {
+		this.invulnerable = Utility.forceBoolean(b);
+		return this;
+	}
 
 
 	addDynamics(variant, x, y) {
@@ -187,6 +195,7 @@ export default class Entity extends Instance {
 		return this;
 	}
 	addHealth(i) {
+		if (this.invulnerable) return this;
 		this.health += Utility.forceInteger(i);
 		if (this.getHealth > this.getMaximumHealth) this.setHealth(this.getMaximumHealth);
 		if (this.getHealth < 0) this.death();
@@ -228,7 +237,9 @@ export default class Entity extends Instance {
 		// console.log(`${this.getClassName} ${this.getId} has Velocity , Acceleration , Position ,`, this.getVelocity, this.getAcceleration, this.getPosition);
 	}
 	death() {
+		if (this.invulnerable) return this;
 		console.log(`${this.getClassName} ${this.getName} ${this.getId} died.\nDestroy?`);
+		this.destroy();
 	}
 
 
@@ -246,7 +257,7 @@ export default class Entity extends Instance {
 	}
 	teleportToOtherSideOfScreen() {
 		if (this.checkIfOutOfScreenBounds() && this.shouldTeleportToOtherSideOfScreen) {
-			console.log(`teleporting...`);
+			// console.log(`teleporting...`);
 			const halfX = this.getSize.getX * 0.5;
 			const halfY = this.getSize.getY * 0.5;
 			if (this.getPosition.getX < mainCamera.getPosition.getX - mainCanvas.canvasElement.halfWidth - halfX) {

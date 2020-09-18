@@ -1,9 +1,14 @@
-import {Math_rad, Math_deg} from "./utility.js";
+import {Math_rad, Math_deg, distanceBetweenPoints} from "./utility.js";
 import {mainCanvas, mainCamera} from "../client.js";
 import {instances, Instance, boids} from "./instance.js";
 import Entity from "./entity.js";
 import Actor from "./actor.js";
 import { Vector2, zeroedVector2 } from "./vector2.js";
+
+const oneOverSixty = 1 / 60;
+const tenOverSixty = 10 / 60;
+const hundredOverSixty = 100 / 60;
+const thousandOverSixty = 1000 / 60;
 
 export default class Boid extends Entity {
 	constructor() {
@@ -230,6 +235,9 @@ export default class Boid extends Entity {
 		this.introduceRandomVelocityIncrease();
 		this.introduceRandomVelocityMultiply();
 		this.limit_velocity();
+		if (this.isWithinHellfire()) {
+			this.addHealth(-hundredOverSixty);
+		}
 	}
 	limit_velocity() {
 		const speedLimit = 100;
@@ -239,6 +247,19 @@ export default class Boid extends Entity {
 			this.velocity.setY((this.velocity.getY / speed) * speedLimit);
 		}
 	}
+
+
+	isWithinHellfire() {
+		for (let obj of [...instances.values()].filter(item => item.getClassName === "Hellfire")) {
+			const dist = distanceBetweenPoints(this.getPosition, obj.getPosition);
+			if (dist <= obj.maxRadius && obj.firing) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+
 
 	
 	get getRotationBasedOnVelocity() {

@@ -1,4 +1,6 @@
 
+import {Vector2} from "./vector2.js";
+
 export let log_verbose = true;
 
 export const alphabet = "abcdefghijklmnopqrstuvwxyz";
@@ -62,3 +64,26 @@ export function Math_rad(deg) {
 export function Math_deg(rad) {
 	return rad * (180 / Math.PI);
 };
+
+export function distanceBetweenPoints(...args) {
+	var valid = false;
+	var ax, ay, bx, by;
+	if (args.length === 2 && args.every(item => item instanceof Vector2)) {
+		ax = args[0].getX;
+		ay = args[0].getY;
+		bx = args[1].getX;
+		by = args[1].getY;
+		valid = true;
+	} else if (args.length === 4 && args.every(item => typeof item === "number")) {
+		ax = args[0];
+		ay = args[1];
+		bx = args[2];
+		by = args[3];
+		valid = true;
+	}
+	if (valid) {
+		return Math.abs(Math.sqrt((ax - bx) ** 2 + (ay - by) ** 2));
+	} else {
+		return new Error("Provided parameters were invalid");
+	}
+}

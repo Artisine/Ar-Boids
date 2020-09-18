@@ -10,34 +10,60 @@
 		<canvas id="canvas">uhoh</canvas>
 	</main>
 	<aside class="hovering-buttons">
-		<form onsubmit="return false;">
-			<div class="form-group p-1">
-				<div class="input-group mt-2">
-					<div class="custom-control custom-checkbox">
-						<input id="toggleBoidsFieldOfView" type="checkbox" class="custom-control-input">
-						<label for="toggleBoidsFieldOfView" class="custom-control-label">Show/Hide Boids Field of View</label>
+		<div class="hovering-buttons-background">
+			<form onsubmit="return false;">
+				<div class="form-group p-1">
+					<div class="input-group mt-2">
+						<div class="custom-control custom-checkbox">
+							<input id="toggleBoidsFieldOfView" type="checkbox" class="custom-control-input">
+							<label for="toggleBoidsFieldOfView" class="custom-control-label">Show/Hide Boids Field of View</label>
+						</div>
+					</div>
+					<div class="input-group mt-2">
+						<input id="rangeNumberOfBoids" type="range" min="1" max="300" value="25" class="custom-range form-control-range">
+						<label for="rangeNumberOfBoids">Alter number of Boids visible (<span id="rangeNumberOfBoids-text"></span>)</label>
+					</div>
+					<div class="input-group mt-2">
+						<input id="rangeBoidsSpeed" type="range" min="0" max="20" step="1" value="1" class="custom-range form-control-range">
+						<label for="rangeBoidsSpeed">Change Speed of Boids (<span id="rangeBoidsSpeed-text"></span>)</label>
+					</div>
+					<div class="input-group mt-2">
+						<div class="custom-control custom-checkbox mt-2">
+							<input id="toggleLighthouseMode" type="checkbox" class="custom-control-input">
+							<label for="toggleLighthouseMode" class="custom-control-label">Toggle Lighthouse Mode</label>
+						</div>
+					</div>
+					<div class="input-group mt-2">
+						<input id="rangeLighthouseFOV" type="range" min="0" max="360" step="1" value="90" disabled>
+						<label for="rangeLighthouseFOV">Change FOV of Lighthouse in Degrees (<span id="rangeLighthouseFOV-text"></span>&deg;)</label>
 					</div>
 				</div>
-				<div class="input-group mt-2">
-					<input id="rangeNumberOfBoids" type="range" min="1" max="300" value="25" class="custom-range form-control-range">
-					<label for="rangeNumberOfBoids">Alter number of Boids visible (<span id="rangeNumberOfBoids-text"></span>)</label>
-				</div>
-				<div class="input-group mt-2">
-					<input id="rangeBoidsSpeed" type="range" min="0" max="20" step="1" value="1" class="custom-range form-control-range">
-					<label for="rangeBoidsSpeed">Change Speed of Boids (<span id="rangeBoidsSpeed-text"></span>)</label>
-				</div>
-				<div class="input-group mt-2">
-					<div class="custom-control custom-checkbox mt-2">
-						<input id="toggleLighthouseMode" type="checkbox" class="custom-control-input">
-						<label for="toggleLighthouseMode" class="custom-control-label">Toggle Lighthouse Mode</label>
+			</form>
+		</div>
+		<div class="hovering-buttons-background mt-2">
+			<form onsubmit="return false;">
+				<div class="form-group p-1">
+					<div class="input-group">
+						<div class="custom-control custom-switch">
+							<input id="toggleHellfire" type="checkbox" class="custom-control-input">
+							<label for="toggleHellfire" class="custom-control-label">Toggle Hellfire</label>
+						</div>
+					</div>
+					<div class="input-group">
+						
 					</div>
 				</div>
-				<div class="input-group mt-2">
-					<input id="rangeLighthouseFOV" type="range" min="0" max="360" step="1" value="90" disabled>
-					<label for="rangeLighthouseFOV">Change FOV of Lighthouse in Degrees (<span id="rangeLighthouseFOV-text"></span>&deg;)</label>
-				</div>
+			</form>
+		</div>
+		<div class="hovering-buttons-background mt-2">
+			<div class="p-1">
+				<p id="selector_boid-id" class="p-0 m-0">ID: WIP</p>
+				<p id="selector_boid-position" class="p-0 m-0">Position: WIP</p>
+				<p id="selector_boid-velocity" class="p-0 m-0">Velocity: WIP</p>
+				<p id="selector_boid-direction" class="p-0 m-0">Direction: WIP</p>
+				<p id="selector_boid-health" class="p-0 m-0">Health: WIP</p>
 			</div>
-		</form>
+		</div>
 	</aside>
 
 	<link href="./bootstrap.min.css" rel="stylesheet" type="text/css">

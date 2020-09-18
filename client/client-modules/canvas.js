@@ -97,6 +97,7 @@ export default class Canvas {
 		return this;
 	}
 	circle(x, y, r) {
+		if (r < 0) return 1;
 		this.ctx.beginPath();
 		this.ctx.arc(x, y, r, 0, Math.PI * 2);
 		this.ctx.closePath();
@@ -188,7 +189,7 @@ export default class Canvas {
 	
 			// this.circle(200, 200, 5);
 			// this.strokeprevious("black");
-			// this.fillprevious("black");
+			// this.fillprevious("white");
 	
 			// this.circle(500, 500, 5);
 			// this.strokeprevious("black");
