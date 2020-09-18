@@ -246,7 +246,9 @@ export default class Boid extends Entity {
 	}
 
 	render() {
-		
+		if (mainCanvas.lighthouseMode && !mainCanvas.camera.canSeeBoid(this)) {
+			return 1;
+		}
 		mainCanvas.ctx.save();
 		mainCanvas.ctx.translate(this.getPosition.getX, this.getPosition.getY);
 		mainCanvas.ctx.rotate( this.getRotationBasedOnVelocity );

@@ -122,6 +122,21 @@ function lighthouse_mode() {
 	const checked = input_toggleLighthouseMode.checked;
 	mainCanvas.lighthouseMode = checked;
 	console.log(`Lighthouse Mode ${(checked) ? "ON" : "Off"}.`);
+	if (checked) {
+		input_rangeLighthouseFOV.disabled = false;
+	} else {
+		input_rangeLighthouseFOV.disabled = true;
+	}
+}
+
+
+const input_rangeLighthouseFOV = Utility.g("#rangeLighthouseFOV");
+const input_rangeLighthouseFOV_text = Utility.g("#rangeLighthouseFOV-text");
+input_rangeLighthouseFOV.addEventListener("input", lighthouseChangeFOV);
+function lighthouseChangeFOV() {
+	const value = Number(input_rangeLighthouseFOV.value);
+	mainCamera.angleOfView = value;
+	input_rangeLighthouseFOV_text.innerHTML = `${value}`;
 }
 
 

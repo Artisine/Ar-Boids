@@ -22,7 +22,7 @@ export default class Camera extends Entity {
 		this.parent = null;
 		this.scaling = null; // Scaling is shared with Canvas
 
-		this.angleOfView = Math_rad(90);
+		this.angleOfView = 100; //in degrees, converted to rad later;
 		this.lengthOfViewLines = 50;
 
 		this.setSize(20, 20);
@@ -34,7 +34,31 @@ export default class Camera extends Entity {
 		console.log(`Bound Camera to thing: ${thing.getClassName} ${thing.getName} ${thing.id}`);
 	}
 	canSeeBoid(boid) {
+		// P = A + W1*(B - A) + W2*(C - A)
+		// these are Vectors! Separate them into components!
+		const halfViewAngle = this.angleOfView * 0.5;
+
+		const Px = boid.getPosition.getX;
+		const Py = boid.getPosition.getY;
+
+		const Ax = this.getPosition.getX;
+		const Ay = this.getPosition.getY;
 		
+		const B = new Vector2(999, 0).rotateInLocalSpace(this.getRotation - halfViewAngle);
+		const Bx = B.getX;
+		const By = B.getY;
+
+		const C = new Vector2(999, 0).rotateInLocalSpace(this.getRotation + halfViewAngle);
+		const Cx = C.getX;
+		const Cy = C.getY;
+
+		const w1 = ((Ax)*(Cy - Ay) + (Py - Ay)*(Cx - Ax) - (Px)*(Cy - Ay)) / ((By - Ay)*(Cx - Ax) - (Bx - Ax)*(Cy - Ay));
+		const w2 = (Py - Ay - (w1)*(By - Ay)) / (Cy - Ay);
+
+		// Point P is inside Triangle ABC if [w1 >= 0 && w2 >= 0 && (w1 + w2) <= 1]
+		const boidInsideViewTriangle = (w1 >= 0) && (w2 >= 0) && (w1 + w2 <= 1);
+
+		return boidInsideViewTriangle;
 	}
 
 	render() {
@@ -60,18 +84,28 @@ export default class Camera extends Entity {
 		// Step 3 - Visual lines?
 
 		if (this.parent !== null && this.parent.lighthouseMode) {
-			mainCanvas.ctx.rotate(-halfViewAngle);
+			// mainCanvas.ctx.rotate(-halfViewAngle);
+			// mainCanvas.lineBetween(
+			// 	new Vector2(0, 0),
+			// 	new Vector2(999, 0)
+			// ).strokeprevious("white");
+			// mainCanvas.ctx.rotate(halfViewAngle);
+			// mainCanvas.ctx.rotate(halfViewAngle);
+			// mainCanvas.lineBetween(
+			// 	new Vector2(0, 0),
+			// 	new Vector2(999 ,0)
+			// ).strokeprevious("white");
+			// mainCanvas.ctx.rotate(-halfViewAngle);
+
 			mainCanvas.lineBetween(
 				new Vector2(0, 0),
-				new Vector2(999, 0)
+				new Vector2(999, 0).rotateInLocalSpace(-halfViewAngle)
 			).strokeprevious("white");
-			mainCanvas.ctx.rotate(halfViewAngle);
-			mainCanvas.ctx.rotate(halfViewAngle);
 			mainCanvas.lineBetween(
 				new Vector2(0, 0),
-				new Vector2(999 ,0)
+				new Vector2(999, 0).rotateInLocalSpace(+halfViewAngle)
 			).strokeprevious("white");
-			mainCanvas.ctx.rotate(-halfViewAngle);
+
 		}
 
 		mainCanvas.ctx.restore();

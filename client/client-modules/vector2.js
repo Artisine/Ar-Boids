@@ -1,3 +1,4 @@
+import { Math_deg, Math_rad } from "./utility.js";
 
 export class Vector2 {
 	constructor(x, y, parent) {
@@ -7,6 +8,7 @@ export class Vector2 {
 		this.y = y;
 		this.magnitude = null;
 		this.parent = parent || null;
+		this.angleFromPositiveXAxis = null;
 	}
 
 	get getClassName() {
@@ -116,6 +118,65 @@ export class Vector2 {
 		);
 		this.normalised = normal;
 		return this.normalised;
+	}
+
+	setAngleFromPositiveXAxisDeg(angleInDeg) {
+		this.angleFromPositiveXAxis = Math_rad(angleInDeg);
+		return this.angleFromPositiveXAxis;
+	}
+	setAngleFromPositiveXAxisRad(angleInRad) {
+		this.getAngleFromPositiveXAxisRad = angleInRad;
+		return this.angleFromPositiveXAxis;
+	}
+	get getAngleFromPositiveXAxisRad() {
+		return this.angleFromPositiveXAxis;
+	}
+	get getAngleFromPositiveXAxisDeg() {
+		return Math_deg(this.angleFromPositiveXAxis);
+	}
+	rotateAbsoluteInWorldSpace(angleInDeg) {
+		if (this.getAngleFromPositiveXAxisRad === null) {
+			this.setAngleFromPositiveXAxisDeg(
+				Math.atan2(
+					this.getY,
+					this.getX
+				)
+			);
+		}
+		// rotations are ABSOLUTE to the world plane
+		const angleInRad = Math_rad(angleInDeg);
+		const x_prime = (this.getX * Math.cos(angleInRad)) - (this.getY * Math.sin(angleInRad));
+		const y_prime = (this.getY * Math.cos(angleInRad)) + (this.getX * Math.sin(angleInRad));
+		this.set(x_prime, y_prime);
+		this.setAngleFromPositiveXAxisDeg(
+			Math.atan2(
+				this.getY,
+				this.getX
+			)
+		);
+		return this;
+	}
+	rotateInLocalSpace(angleInDeg) {
+		if (this.getAngleFromPositiveXAxisRad === null) {
+			this.setAngleFromPositiveXAxisDeg(
+				Math.atan2(
+					this.getY,
+					this.getX
+				)
+			);
+		}
+		// rotations are Additive to current rotation!
+		const angleInRad = Math_rad(angleInDeg + this.getAngleFromPositiveXAxisDeg);
+		const x_prime = (this.getX * Math.cos(angleInRad)) - (this.getY * Math.sin(angleInRad));
+		const y_prime = (this.getY * Math.cos(angleInRad)) + (this.getX * Math.sin(angleInRad));
+		this.set(x_prime, y_prime);
+		this.setAngleFromPositiveXAxisDeg(
+			Math.atan2(
+				this.getY,
+				this.getX
+			)
+		);
+		return this;
 	}
 }
 
